@@ -327,6 +327,14 @@
 
 <div class="content" role="main">
 
+  <div>
+    <div *ngFor="let v of vehicles">
+      <span> {{v.id}} </span>
+      <span> {{v.brand}} </span>
+      <span> {{v.model}} </span>
+    </div>
+  </div>
+
   <!-- Highlight Card -->
   <div class="card highlight-card card-small">
 
