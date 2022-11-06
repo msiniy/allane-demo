@@ -11,12 +11,29 @@ values
     ('930', 1989, 5), ('Boxter', 2003, 5), ('Macan', 2019, 5),
     ('Amarok', 2022, 6), ('Passat', 2010, 6), ('Tiguan', 2016, 6);
 
+-- create a couple of customer
+insert into customer (first_name, last_name, birth_date)
+values
+    ('Max', 'Mustermann', '1980-01-01'),
+    ('Erika', 'Musterfrau', '1980-01-01');
+
+-- create some contracts
+insert into leasing_contract (contract_number, customer_id, monthly_rate)
+values
+    (1, 1, 300),
+    (2, 1, 350),
+    (3, 2, 250),
+    (4, 2, 450);
+
 -- create some vehicles
 insert into vehicle (vehicle_model_id, price, vin, contract_id)
 values
-    (1, 38400, 'WA1CMAFPXEA115549', null),
-    (5, 44500, '5UXKR6C56E0303444', null),
-    (8, 54600, null, null),
-    (10, 17700, null, null),
+    (1, 38400, 'WA1CMAFPXEA115549', 1),
+    (5, 44500, '5UXKR6C56E0303444', 2),
+    (8, 54600, null, 3),
+    (10, 17700, null, 4),
     (17, 77800, 'WP0AF2A93BS785679', null),
     (19, 33300, null, null);
+
+
+

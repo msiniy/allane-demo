@@ -16,7 +16,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "FROM Vehicle v " +
             "JOIN VehicleModel m ON m = v.model " +
             "JOIN VehicleBrand b ON b = m.brand ")
-    Page<VehicleDto> getVehiclePage(Pageable pageRequest);
+    Page<VehicleDto> findVehicles(Pageable pageRequest);
 
 
     @Query("SELECT new se.allane.demo.repositories.VehicleDetailsDto (v.id, v.version, v.vin, v.price, " +

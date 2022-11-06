@@ -1,13 +1,13 @@
 create table vehicle_brand (
     id bigint not null auto_increment,
-    version integer,
+    version integer default 0,
     name varchar(255) not null,
     primary key (id)
 );
 
 create table vehicle_model (
     id bigint not null auto_increment,
-    version integer,
+    version integer default 0,
     name varchar(255) not null,
     year smallint not null,
     vehicle_brand_id bigint not null,
@@ -34,7 +34,7 @@ foreign key (vehicle_model_id) references vehicle_model (id);
 
 create table customer (
     id bigint not null auto_increment,
-    version integer,
+    version integer default 0,
     birth_date date not null,
     first_name varchar(255) not null,
     last_name varchar(255) not null,
@@ -43,7 +43,7 @@ create table customer (
 
 create table leasing_contract (
     id bigint not null auto_increment,
-    version integer,
+    version integer default 0,
     contract_number bigint not null,
     monthly_rate decimal(19,2) not null,
     customer_id bigint not null,

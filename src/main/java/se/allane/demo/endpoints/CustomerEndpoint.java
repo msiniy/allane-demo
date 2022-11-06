@@ -1,5 +1,6 @@
 package se.allane.demo.endpoints;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,31 +12,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import se.allane.demo.repositories.VehicleDetailsDto;
-import se.allane.demo.repositories.VehicleDto;
-import se.allane.demo.repositories.VehicleRepository;
+import se.allane.demo.repositories.CustomerDto;
+import se.allane.demo.repositories.CustomerRepository;
 
 import javax.validation.constraints.NotNull;
 
 @RestController
-@RequestMapping("/api/vehicles")
+@RequestMapping("/api/customers")
 @RequiredArgsConstructor
-public class VehicleEndpoint {
-
-    private final VehicleRepository vehicleRepository;
+public class CustomerEndpoint {
+    private final CustomerRepository customerRepository;
 
     @GetMapping
     @ResponseBody
-    Page<VehicleDto> getVehicles(@RequestParam(defaultValue = "0") Integer page,
-                                 @RequestParam(defaultValue = "10") Integer size) {
+    Page<CustomerDto> getCustomers(@RequestParam(defaultValue = "0") Integer page,
+                                   @RequestParam(defaultValue = "10") Integer size) {
         var pageable = PageRequest.of(page, size);
-        return this.vehicleRepository.findVehicles(pageable);
+        return this.customerRepository.findCustomers(pageable);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    VehicleDetailsDto getVehicleDetails(@PathVariable("id") @NotNull Long id) {
-        return this.vehicleRepository.getVehicleDetails(id)
+    CustomerDto getCustomer(@PathVariable("id") @NotNull Long id) {
+        return this.customerRepository.getCustomerDetails(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
