@@ -20,7 +20,7 @@ foreign key (vehicle_brand_id) references vehicle_brand (id);
 
 create table vehicle (
     id bigint not null auto_increment,
-    version integer,
+    version integer default 0,
     price decimal(19,2) not null,
     vin varchar(255),
     vehicle_model_id bigint not null,

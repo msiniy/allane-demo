@@ -32,22 +32,10 @@ public class VehicleEndpoint {
         return this.vehicleRepository.getVehiclePage(pageable);
     }
 
-
     @GetMapping("/{id}")
     @ResponseBody
     VehicleDetailsDto getVehicleDetails(@PathVariable("id") @NotNull Long id) {
-        var vehicle = this.vehicleRepository.findById(id)
+        return this.vehicleRepository.getVehicleDetails(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        var contract = vehicle.getContract();
-        return VehicleDetailsDto.builder()
-                .id(vehicle.getId())
-                .version(vehicle.getVersion())
-                .brand(vehicle.getModel().getBrand().getName())
-                .model(vehicle.getModel().getName())
-                .year(vehicle.getModel().getYear())
-                .vin((vehicle.getVin()))
-                .contractId(contract == null ? null : contract.getId() )
-                .contractNumber(contract == null ? null : contract.getContractNumber())
-                .build();
     }
 }

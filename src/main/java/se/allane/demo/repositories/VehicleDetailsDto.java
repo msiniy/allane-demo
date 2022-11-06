@@ -1,17 +1,8 @@
 package se.allane.demo.repositories;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
+import java.math.BigDecimal;
+import java.time.Year;
 
-@Data
-@SuperBuilder
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class VehicleDetailsDto extends VehicleDto {
-    private final Integer version;
-    private final String vin;
-    private final Long contractId;
-    private final Long contractNumber;
-}
+
+public record VehicleDetailsDto(Long id, Integer version, String vin, BigDecimal price,
+                                String brand, String model, Year year, Long contractId, Long contractNumber) {}

@@ -7,10 +7,24 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import se.allane.demo.persistence.Vehicle;
 
+import java.util.Optional;
+
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    @Query("SELECT new se.allane.demo.repositories.VehicleDto(v.id, v.model.brand.name, v.model.name, v.model.year) " +
-            "FROM Vehicle v ")
+    @Query("SELECT new se.allane.demo.repositories.VehicleDto(v.id, b.name, m.name, m.year) " +
+            "FROM Vehicle v " +
+            "JOIN VehicleModel m ON m = v.model " +
+            "JOIN VehicleBrand b ON b = m.brand ")
     Page<VehicleDto> getVehiclePage(Pageable pageRequest);
+
+
+    @Query("SELECT new se.allane.demo.repositories.VehicleDetailsDto (v.id, v.version, v.vin, v.price, " +
+            "b.name, m.name, m.year, c.id, c.contractNumber) " +
+            "FROM Vehicle v " +
+            "JOIN VehicleModel m ON m = v.model " +
+            "JOIN VehicleBrand b ON b = m.brand " +
+            "LEFT JOIN LeasingContract c ON c = v.contract " +
+            "WHERE v.id = :id")
+    Optional<VehicleDetailsDto> getVehicleDetails(Long id);
 }
