@@ -1,0 +1,29 @@
+plugins {
+  id 'java'
+  id "com.github.node-gradle.node" version "3.5.0"
+}
+
+node {
+  version = '14.19.2'
+  download = true
+}
+
+task buildFrontend(type: NpxTask, dependsOn: 'npmInstall') {
+  command = '@angular/cli@14.2.8'
+  args = ['build', '--configuration', 'production']
+  inputs.dir(project.fileTree("src").exclude("**/*.spec.ts"))
+  inputs.dir("node_modules")
+  inputs.files("angular.json", ".browserslistrc", "tsconfig.json", "tsconfig.app.json")
+  outputs.dir("${project.buildDir}/demo-ui")
+}
+
+sourceSets {
+  java {
+    main {
+      resources {
+        // This makes the processResources task automatically depend on the buildFrontend one
+        srcDir(buildFrontend)
+      }
+    }
+  }
+}
