@@ -1,0 +1,8 @@
+<p>vehicle-list works!</p>
+<table mat-table [dataSource]="vehicles">
+</table>
+
+<div *ngFor="let v of vehicles">
+  <p>{{v.id}}</p>
+  <p>{{v.brand}}</p>
+</div>
