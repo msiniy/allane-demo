@@ -1,16 +1,1 @@
-.container {
-  min-height: 400px;
-}
 
-.sidenav-content {
-  display: flex;
-  height: 100%;
-  align-items: right;
-  justify-content: right;
-}
-
-.main-content {
-  display: flex;
-  height: 100%;
-  padding: 20px;
-}

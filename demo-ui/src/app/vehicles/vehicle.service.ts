@@ -3,17 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Vehicle } from './vehicle';
+import { EntityService } from '../entity.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class VehicleService {
-
-  private apiEndpoint: string = "/api/vehicles";
-
-  constructor(private http: HttpClient) { }
-
-  public find(): Observable<Vehicle[]> {
-    return this.http.get<Vehicle[]>(this.apiEndpoint);
-  }
+export class VehicleService extends EntityService<Vehicle> {
+  constructor(http: HttpClient) { super(http,  "/api/vehicles")}
 }

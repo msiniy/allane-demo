@@ -1,22 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
+import { EntityListComponent } from '../entity-list.component';
 import { Vehicle } from './vehicle';
 import { VehicleService } from './vehicle.service';
 
 @Component({
   selector: 'vehicle-list',
   templateUrl: './vehicle-list.component.html',
-  styleUrls: ['./vehicle-list.component.css']
+  styleUrls: ['./vehicle-list.component.css'],
 })
-export class VehicleListComponent implements OnInit {
+export class VehicleListComponent extends EntityListComponent<Vehicle> implements OnInit {
 
-  vehicles: Vehicle[] = [];
-
-  constructor(private vehicleService: VehicleService) { }
-
-  ngOnInit(): void {
-    this.vehicleService.find().subscribe((data: any)  => {
-      this.vehicles = [...data.content];
-    })
+  constructor(vehicleService: VehicleService) {
+    super(vehicleService);
   }
 
+  ngOnInit(): void {
+    this.switchPage(0);
+  }
 }
