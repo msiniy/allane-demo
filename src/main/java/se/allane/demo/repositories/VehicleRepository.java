@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    @Query("SELECT new se.allane.demo.repositories.VehicleDto(v.id, b.name, m.name, m.year) " +
+    @Query("SELECT new se.allane.demo.repositories.VehicleDto(v.id, b.name, m.name, m.year, v.vin, v.price) " +
             "FROM Vehicle v " +
             "JOIN VehicleModel m ON m = v.model " +
             "JOIN VehicleBrand b ON b = m.brand ")

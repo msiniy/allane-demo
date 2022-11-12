@@ -10,19 +10,18 @@ import { ContractsModule } from './contracts/contracts.module';
 import { CustomersModule } from './customers/customers.module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     NoopAnimationsModule,
     HttpClientModule,
+
     AppRoutingModule,
     VehiclesModule,
     ContractsModule,
     CustomersModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,2 +1,46 @@
 <h2>Contracts</h2>
 
+<ng-container *ngIf="(entityState | async) as page">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Contract No</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Vehicle</th>
+        <th scope="col">VIN</th>
+        <th scope="col">Monthly Rate</th>
+        <th scope="col">Vehicle Price</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of page.content">
+        <th scope="row">{{ c.contract.id }}</th>
+        <td>{{ c.contract.contractNumber }}</td>
+        <td>{{ c.customer.firstName }} {{c.customer.lastName}}</td>
+        <td>{{ c.vehicle.brand }} {{c.vehicle.model }} ({{ c.vehicle.year }})</td>
+        <td *ngIf="c.vehicle.vin">{{ c.vehicle.vin }}</td>
+        <td *ngIf="!c.vehicle.vin">-</td>
+        <td>{{ c.contract.monthlyRate | currency: "EUR" }}</td>
+        <td>{{ c.vehicle.price | currency: "EUR" }}</td>
+        <td><a class="bi bi-folder-symlink"></a></td>
+      </tr>
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation example" *ngIf="page.totalPages > 1">
+    <ul class="pagination">
+
+      <li
+        *ngFor="
+          let pageNumber of [].constructor(page.totalPages);
+          let i = index
+        "
+        class="page-item"
+      >
+         <a class="page-link" (click)="switchPage(i)">{{ i + 1 }}</a>
+      </li>
+
+    </ul>
+  </nav>
+</ng-container>

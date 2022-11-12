@@ -1,1 +1,37 @@
 <h2>Customers</h2>
+
+<ng-container *ngIf="(entityState | async) as page">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of page.content">
+        <th scope="row">{{ c.id }}</th>
+        <td>{{ c.firstName }}</td>
+        <td>{{ c.lastName }}</td>
+        <td><a class="bi bi-folder-symlink"></a></td>
+      </tr>
+    </tbody>
+  </table>
+  <nav aria-label="Page navigation example" *ngIf="page.totalPages > 1">
+    <ul class="pagination">
+
+      <li
+        *ngFor="
+          let pageNumber of [].constructor(page.totalPages);
+          let i = index
+        "
+        class="page-item"
+      >
+         <a class="page-link" (click)="switchPage(i)">{{ i + 1 }}</a>
+      </li>
+
+    </ul>
+  </nav>
+</ng-container>

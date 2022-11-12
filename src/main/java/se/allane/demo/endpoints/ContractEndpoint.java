@@ -51,6 +51,8 @@ public class ContractEndpoint {
                         .brand(c.brandName())
                         .model(c.modelName())
                         .year(c.modelYear())
+                        .vin(c.vehicleVin())
+                        .price(c.vehiclePrice())
                         .build())
                 .build();
     }

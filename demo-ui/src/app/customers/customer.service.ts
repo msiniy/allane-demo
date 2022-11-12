@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Vehicle } from './vehicle';
 import { EntityService } from '../entity.service';
+import { Customer } from './customer';
 
 @Injectable({
   providedIn: 'root'
 })
-export class VehicleService extends EntityService<Vehicle> {
-  constructor(http: HttpClient) { super(http,  "/api/vehicles")}
+export class CustomerService extends EntityService<Customer> {
+  constructor(http: HttpClient) { super(http,  "/api/customers")}
 }

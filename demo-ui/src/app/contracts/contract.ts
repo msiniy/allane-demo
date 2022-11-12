@@ -14,5 +14,7 @@ export interface ContractOverview {
     brand: string;
     model: string;
     year: number;
+    vin: string;
+    price: number;
   }
 }

@@ -6,7 +6,7 @@
         <th scope="col">#</th>
         <th scope="col">Brand</th>
         <th scope="col">Model</th>
-        <th scope="col"></th>
+        <th scope="col">Details</th>
       </tr>
     </thead>
     <tbody>
@@ -14,10 +14,11 @@
         <th scope="row">{{ v.id }}</th>
         <td>{{ v.brand }}</td>
         <td>{{ v.model }} ({{ v.year }})</td>
+        <td><a class="bi bi-folder-symlink"></a></td>
       </tr>
     </tbody>
   </table>
-  <nav aria-label="Page navigation example">
+  <nav aria-label="Page navigation example" *ngIf="page.totalPages > 1">
     <ul class="pagination">
 
       <li
