@@ -20,4 +20,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
             "FROM Customer c WHERE c.id = :id")
     Optional<CustomerDto> getCustomerDetails(Long id);
 
+    Optional<Customer> findByIdAndVersion(Long id, Integer version);
 }

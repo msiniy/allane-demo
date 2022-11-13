@@ -1,0 +1,37 @@
+<form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+  <input type="hidden" id="vehicleVersion" formControlName="version" />
+  <div class="form-group">
+    <label for="firstNameFormControl">First Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="firstNameFormControl"
+      formControlName="firstName"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="lastNameFormControl">Last Name</label>
+    <input
+      type="text"
+      class="form-control"
+      id="lastNameFormControl"
+      formControlName="lastName"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="birthDateFormControl">Birthdate</label>
+    <input
+      type="date"
+      class="form-control"
+      id="birthDateFormControl"
+      formControlName="birthDate"
+    />
+  </div>
+
+  <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">
+    Cancel
+  </button>
+  <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
+</form>

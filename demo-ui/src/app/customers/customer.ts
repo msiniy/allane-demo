@@ -1,5 +1,7 @@
 export interface Customer {
-  id: number;
+  id?: number;
+  version: number;
   firstName: string;
   lastName: string;
+  birthDate: Date;
 }

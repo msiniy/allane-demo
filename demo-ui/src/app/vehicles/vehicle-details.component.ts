@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { forkJoin, merge, Observable, of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { Brand, Model, VehicleDetails } from './vehicle';
 import { VehicleService } from './vehicle.service';
 
@@ -12,7 +12,7 @@ import { VehicleService } from './vehicle.service';
   styleUrls: ['./vehicle-details.component.css'],
 })
 export class VehicleDetailsComponent implements OnInit {
-  vehicle: VehicleDetails| null = null;
+  vehicle: VehicleDetails | null = null;
 
   selectedBrand: Brand | null = null;
   selectedModel: Model | null = null;
@@ -22,23 +22,23 @@ export class VehicleDetailsComponent implements OnInit {
   modelsByBrandId = new Map<number, Model[]>();
 
   vehicleForm = this.fb.group({
-    version: new FormControl(0, {
+    version: new FormControl<number>(0, {
       validators: Validators.required,
       nonNullable: true,
     }),
-    brandId: new FormControl<number | null>(null, {
+    brandId: new FormControl<number>(-1, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    modelId: new FormControl<number | null>(null, {
+    modelId: new FormControl<number>(-1, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    modelYear: new FormControl<number | null>({ value: null, disabled: true }),
+    modelYear: new FormControl<number>({ value: -1, disabled: true }),
     vin: new FormControl<string | null>(null, {
       validators: [Validators.minLength(17), Validators.maxLength(17)],
     }),
-    price: new FormControl<number | null>(null, {
+    price: new FormControl<number>(0, {
       validators: [Validators.required],
     }),
   });
@@ -133,12 +133,12 @@ export class VehicleDetailsComponent implements OnInit {
       ...this.vehicle,
       ...(this.vehicleForm.value as VehicleDetails),
     };
+    // replace empty VIN with undefined (will be serialized as null)
     if (vehicleToSave.vin === '') {
       vehicleToSave.vin = undefined;
     }
     this.vehicleService.save(vehicleToSave).subscribe((vehicle) => {
       if (vehicleToSave.id) {
-        // updating form
         this.updateForm(vehicle);
       } else {
         this.router.navigate(['/vehicles', vehicle.id]);
