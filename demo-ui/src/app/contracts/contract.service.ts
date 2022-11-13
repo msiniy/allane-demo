@@ -7,6 +7,6 @@ import { EntityService } from '../entity.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ContractService extends EntityService<ContractOverview> {
+export class ContractService extends EntityService<ContractOverview, ContractOverview> {
   constructor(http: HttpClient) { super(http,  "/api/contracts")}
 }

@@ -1,6 +1,6 @@
 <h2>Customers</h2>
 
-<ng-container *ngIf="(entityState | async) as page">
+<ng-container *ngIf="(pageState | async) as page">
   <table class="table">
     <thead>
       <tr>
@@ -15,7 +15,7 @@
         <th scope="row">{{ c.id }}</th>
         <td>{{ c.firstName }}</td>
         <td>{{ c.lastName }}</td>
-        <td><a class="bi bi-folder-symlink"></a></td>
+        <td><a class="bi bi-folder-symlink" [routerLink]="['/customers', c.id]"></a></td>
       </tr>
     </tbody>
   </table>

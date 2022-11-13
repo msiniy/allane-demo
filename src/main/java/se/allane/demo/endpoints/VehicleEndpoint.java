@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import se.allane.demo.repositories.ModelAndBrandDto;
 import se.allane.demo.repositories.VehicleDetailsDto;
 import se.allane.demo.repositories.VehicleDto;
 import se.allane.demo.repositories.VehicleRepository;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vehicles")
@@ -37,5 +39,11 @@ public class VehicleEndpoint {
     VehicleDetailsDto getVehicleDetails(@PathVariable("id") @NotNull Long id) {
         return this.vehicleRepository.getVehicleDetails(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/modelsAndBrands")
+    @ResponseBody
+    List<ModelAndBrandDto> getModelsAndBrands() {
+        return this.vehicleRepository.getModelsAndBrands();
     }
 }

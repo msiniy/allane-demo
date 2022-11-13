@@ -7,14 +7,17 @@ export interface ContractOverview {
     monthlyRate: number;
   }
   customer: {
+    id: number;
     firstName: string;
     lastName: string;
   }
   vehicle: {
-    brand: string;
-    model: string;
-    year: number;
-    vin: string;
+    id: number;
+    brandName: string;
+    modelName: string;
+    modelYear: number;
+    vin?: string;
     price: number;
   }
 }
+

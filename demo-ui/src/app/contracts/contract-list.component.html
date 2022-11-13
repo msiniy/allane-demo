@@ -1,6 +1,6 @@
 <h2>Contracts</h2>
 
-<ng-container *ngIf="(entityState | async) as page">
+<ng-container *ngIf="(pageState | async) as page">
   <table class="table">
     <thead>
       <tr>
@@ -19,12 +19,11 @@
         <th scope="row">{{ c.contract.id }}</th>
         <td>{{ c.contract.contractNumber }}</td>
         <td>{{ c.customer.firstName }} {{c.customer.lastName}}</td>
-        <td>{{ c.vehicle.brand }} {{c.vehicle.model }} ({{ c.vehicle.year }})</td>
-        <td *ngIf="c.vehicle.vin">{{ c.vehicle.vin }}</td>
-        <td *ngIf="!c.vehicle.vin">-</td>
+        <td>{{ c.vehicle.brandName }} {{c.vehicle.modelName }} ({{ c.vehicle.modelYear }})</td>
+        <td>{{ c.vehicle.vin ?? '-' }}</td>
         <td>{{ c.contract.monthlyRate | currency: "EUR" }}</td>
         <td>{{ c.vehicle.price | currency: "EUR" }}</td>
-        <td><a class="bi bi-folder-symlink"></a></td>
+        <td><a class="bi bi-folder-symlink" [routerLink]="['/contracts', c.contract.id]"></a></td>
       </tr>
     </tbody>
   </table>

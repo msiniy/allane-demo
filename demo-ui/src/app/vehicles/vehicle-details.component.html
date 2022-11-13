@@ -1,0 +1,61 @@
+<form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="brandFormControl">Brand</label>
+    <select
+      class="form-control"
+      id="brandFormControl"
+      formControlName="brand"
+      (change)="onBrandChange()"
+    >
+      <option [ngValue]="null" disabled>Select brand</option>
+      <option *ngFor="let b of brands.values()" [ngValue]="b.brandId">
+        {{ b.brandName }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="modelFormControl">Model</label>
+    <select class="form-control" id="modelFormControl" formControlName="model" (change)="onModelChange()">
+      <option [ngValue]="null" disabled>Select model</option>
+      <option *ngFor="let m of models.values()" [ngValue]="m.modelId">{{ m.modelName }}({{ m.modelYear }})</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="yearFormControl">Year</label>
+    <input
+      type="text"
+      class="form-control"
+      id="yearFormControl"
+      formControlName="year"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="vinFormControl">VIN</label>
+    <input
+      type="text"
+      class="form-control"
+      id="vinFormControl"
+      formControlName="vin"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="priceFormControl">Price</label>
+    <input
+      type="text"
+      class="form-control"
+      id="priceFormControl"
+      formControlName="price"
+    />
+  </div>
+
+  <button type="reset" class="btn btn-secondary me-2 mt-2">Cancel</button>
+  <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
+
+  <pre>
+    {{ vehicleForm.value | json }}
+  </pre>
+</form>

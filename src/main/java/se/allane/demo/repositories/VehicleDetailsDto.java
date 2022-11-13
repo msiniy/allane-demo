@@ -5,4 +5,6 @@ import java.time.Year;
 
 
 public record VehicleDetailsDto(Long id, Integer version, String vin, BigDecimal price,
-                                String brand, String model, Year year, Long contractId, Long contractNumber) {}
+                                Long brandId, String brandName,
+                                Long modelId, String modelName, Year modelYear,
+                                Long contractId, Long contractNumber) {}

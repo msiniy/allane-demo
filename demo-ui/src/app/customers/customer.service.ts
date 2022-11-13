@@ -7,6 +7,6 @@ import { Customer } from './customer';
 @Injectable({
   providedIn: 'root'
 })
-export class CustomerService extends EntityService<Customer> {
+export class CustomerService extends EntityService<Customer, Customer> {
   constructor(http: HttpClient) { super(http,  "/api/customers")}
 }

@@ -8,7 +8,7 @@ import { ContractService } from './contract.service';
   templateUrl: './contract-list.component.html',
   styleUrls: ['./contract-list.component.css']
 })
-export class ContractListComponent extends EntityListComponent<ContractOverview> implements OnInit {
+export class ContractListComponent extends EntityListComponent<ContractOverview, ContractOverview> implements OnInit {
 
   constructor(contractService: ContractService) {
     super(contractService);

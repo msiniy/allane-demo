@@ -8,7 +8,7 @@ import { CustomerService } from './customer.service';
   templateUrl: './customer-list.component.html',
   styleUrls: ['./customer-list.component.css']
 })
-export class CustomerListComponent extends EntityListComponent<Customer> implements OnInit {
+export class CustomerListComponent extends EntityListComponent<Customer, Customer> implements OnInit {
 
   constructor(private customerService: CustomerService) {
     super(customerService);

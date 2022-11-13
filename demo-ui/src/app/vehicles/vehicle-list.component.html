@@ -1,9 +1,9 @@
 <h2>Vehicles</h2>
-<ng-container *ngIf="(entityState | async) as page">
+<ng-container *ngIf="(pageState | async) as page">
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">#</th>
+        <th scope="col">Id</th>
         <th scope="col">Brand</th>
         <th scope="col">Model</th>
         <th scope="col">Details</th>
@@ -12,9 +12,9 @@
     <tbody>
       <tr *ngFor="let v of page.content">
         <th scope="row">{{ v.id }}</th>
-        <td>{{ v.brand }}</td>
-        <td>{{ v.model }} ({{ v.year }})</td>
-        <td><a class="bi bi-folder-symlink"></a></td>
+        <td>{{ v.brandName }}</td>
+        <td>{{ v.modelName }} ({{ v.modelYear }})</td>
+        <td><a class="bi bi-folder-symlink" [routerLink]="['/vehicles', v.id]"></a></td>
       </tr>
     </tbody>
   </table>
