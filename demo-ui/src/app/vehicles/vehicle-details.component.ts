@@ -26,11 +26,11 @@ export class VehicleDetailsComponent implements OnInit {
       validators: Validators.required,
       nonNullable: true,
     }),
-    brandId: new FormControl<number>(-1, {
+    brandId: new FormControl<number>(0, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    modelId: new FormControl<number>(-1, {
+    modelId: new FormControl<number>(0, {
       validators: [Validators.required],
       nonNullable: true,
     }),

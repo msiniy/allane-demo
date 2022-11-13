@@ -1,7 +1,7 @@
 package se.allane.demo.persistence;
 
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
-@ToString
+@Setter
 public class LeasingContract extends BaseEntity {
 
     static final String JOIN_COLUMN_NAME = "contract_id";

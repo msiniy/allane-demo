@@ -1,16 +1,20 @@
+export interface Contract {
+  id?: number;
+  version: number;
+  contractNumber: number;
+  monthlyRate: number;
+  vehicleId: number;
+  customerId: number;
+}
 
 export interface ContractOverview {
-  contract: {
-    id: number;
-    version: number;
-    contractNumber: number;
-    monthlyRate: number;
-  }
+  contract: Contract;
   customer: {
     id: number;
     firstName: string;
     lastName: string;
-  }
+    birthDate: Date;
+  };
   vehicle: {
     id: number;
     brandName: string;
@@ -18,6 +22,5 @@ export interface ContractOverview {
     modelYear: number;
     vin?: string;
     price: number;
-  }
+  };
 }
-

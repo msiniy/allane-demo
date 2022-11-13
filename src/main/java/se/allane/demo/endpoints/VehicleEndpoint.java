@@ -3,6 +3,7 @@ package se.allane.demo.endpoints;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +41,7 @@ public class VehicleEndpoint {
     @ResponseBody
     Page<VehicleDto> getVehicles(@RequestParam(defaultValue = "0") Integer page,
                                  @RequestParam(defaultValue = "10") Integer size) {
-        var pageable = PageRequest.of(page, size);
+        var pageable = PageRequest.of(page, size,  Sort.Direction.ASC, "id");
         return this.vehicleRepository.findVehicles(pageable);
     }
 
@@ -49,6 +50,12 @@ public class VehicleEndpoint {
     VehicleDetailsDto getVehicleDetails(@PathVariable("id") @NotNull Long id) {
         return this.vehicleRepository.getVehicleDetails(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/findFree")
+    @ResponseBody
+    List<VehicleDto> findFreeVehicles() {
+        return this.vehicleRepository.findFree();
     }
 
     @GetMapping("/modelsAndBrands")

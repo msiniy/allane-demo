@@ -23,6 +23,12 @@ export class VehicleService extends EntityService<Vehicle, VehicleDetails> {
     );
   }
 
+  findFree(): Observable<Vehicle[]> {
+    return this.httpClient.get<Vehicle[]>(
+      `${VehicleService.apiEndpoint}/findFree`
+    );
+  }
+
   save(vehicle: VehicleDetails): Observable<VehicleDetails> {
     if (vehicle.id) {
       return this.httpClient.put<VehicleDetails>(

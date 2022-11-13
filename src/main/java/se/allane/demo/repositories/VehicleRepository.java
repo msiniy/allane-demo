@@ -35,4 +35,11 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     List<ModelAndBrandDto> getModelsAndBrands();
 
     Optional<Vehicle> findByIdAndVersion(Long id, Integer version);
+
+    @Query("SELECT new se.allane.demo.repositories.VehicleDto(v.id, b.name, m.name, m.year, v.vin, v.price) " +
+            "FROM Vehicle v " +
+            "JOIN VehicleModel m ON m = v.model " +
+            "JOIN VehicleBrand b ON b = m.brand " +
+            "WHERE v.contract IS NULL ")
+    List<VehicleDto> findFree();
 }

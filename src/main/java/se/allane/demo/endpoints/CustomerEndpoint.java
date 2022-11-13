@@ -4,6 +4,7 @@ package se.allane.demo.endpoints;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +35,7 @@ public class CustomerEndpoint {
     @ResponseBody
     Page<CustomerDto> getCustomers(@RequestParam(defaultValue = "0") Integer page,
                                    @RequestParam(defaultValue = "10") Integer size) {
-        var pageable = PageRequest.of(page, size);
+        var pageable = PageRequest.of(page, size,  Sort.Direction.ASC, "id");
         return this.customerRepository.findCustomers(pageable);
     }
 

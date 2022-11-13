@@ -1,1 +1,72 @@
-<p>contract-details works! {{contract | async | json}}</p>
+<form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
+  <input type="hidden" id="contractVersion" formControlName="version" />
+
+  <div class="form-group">
+    <label for="contractNumberFormControl">Contract No</label>
+    <input
+      type="text"
+      class="form-control"
+      id="contractNumberFormControl"
+      formControlName="contractNumber"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="monthlyRateFormControl">Monthly rate</label>
+    <input
+      type="text"
+      class="form-control"
+      id="monthlyRateFormControl"
+      formControlName="monthlyRate"
+    />
+  </div>
+
+  <div class="form-group" *ngIf="isNew">
+    <label for="vehicleFormControl">Vehicle</label>
+    <select
+      class="form-control"
+      id="vehicleFormControl"
+      formControlName="vehicleId"
+    >
+      <option [ngValue]="null" disabled>Select vehicle</option>
+      <option *ngFor="let v of vehicles" [ngValue]="v.id">
+        {{ v.brandName }} - {{v.modelName}}({{v.modelYear}})
+      </option>
+    </select>
+  </div>
+
+  <div class="form-group" *ngIf="isNew">
+    <label for="customerFormControl">Customer</label>
+    <select
+      class="form-control"
+      id="customerFormControl"
+      formControlName="customerId"
+    >
+      <option [ngValue]="null" disabled>Select customer</option>
+      <option *ngFor="let c of customers" [ngValue]="c.id">
+        {{ c.firstName }} {{ c.lastName }}
+      </option>
+    </select>
+  </div>
+
+  <div class="container" *ngIf="!isNew">
+    <div class="row">
+      <div class="col">Customer</div>
+      <div class="col">{{ contract?.customer?.firstName }} {{contract?.customer?.lastName}}</div>
+      <div class="col"></div>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="!isNew">
+    <div class="row">
+      <div class="col">Vehicle</div>
+      <div class="col">{{ contract?.vehicle?.brandName }} {{contract?.vehicle?.modelName}} ({{contract?.vehicle?.modelYear}})</div>
+      <div class="col">VIN: {{ contract?.vehicle?.vin }}</div>
+    </div>
+  </div>
+
+  <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">
+    Cancel
+  </button>
+  <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
+</form>
