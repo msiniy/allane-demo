@@ -1,14 +1,15 @@
 <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+  <input type="hidden" id="vehicleVersion" formControlName="version" />
   <div class="form-group">
     <label for="brandFormControl">Brand</label>
     <select
       class="form-control"
       id="brandFormControl"
-      formControlName="brand"
+      formControlName="brandId"
       (change)="onBrandChange()"
     >
       <option [ngValue]="null" disabled>Select brand</option>
-      <option *ngFor="let b of brands.values()" [ngValue]="b.brandId">
+      <option *ngFor="let b of brands" [ngValue]="b.brandId">
         {{ b.brandName }}
       </option>
     </select>
@@ -16,9 +17,9 @@
 
   <div class="form-group">
     <label for="modelFormControl">Model</label>
-    <select class="form-control" id="modelFormControl" formControlName="model" (change)="onModelChange()">
+    <select class="form-control" id="modelFormControl" formControlName="modelId" (change)="onModelChange()">
       <option [ngValue]="null" disabled>Select model</option>
-      <option *ngFor="let m of models.values()" [ngValue]="m.modelId">{{ m.modelName }}({{ m.modelYear }})</option>
+      <option *ngFor="let m of models" [ngValue]="m.modelId">{{ m.modelName }}({{ m.modelYear }})</option>
     </select>
   </div>
 
@@ -28,7 +29,7 @@
       type="text"
       class="form-control"
       id="yearFormControl"
-      formControlName="year"
+      formControlName="modelYear"
     />
   </div>
 
@@ -52,10 +53,6 @@
     />
   </div>
 
-  <button type="reset" class="btn btn-secondary me-2 mt-2">Cancel</button>
+  <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">Cancel</button>
   <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
-
-  <pre>
-    {{ vehicleForm.value | json }}
-  </pre>
 </form>

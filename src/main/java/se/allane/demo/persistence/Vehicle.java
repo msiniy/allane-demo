@@ -1,6 +1,7 @@
 package se.allane.demo.persistence;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Getter
+@Setter
 public class Vehicle extends BaseEntity {
 
     @ManyToOne(optional = false)

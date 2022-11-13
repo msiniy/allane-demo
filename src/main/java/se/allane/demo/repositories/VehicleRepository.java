@@ -33,4 +33,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
             "FROM VehicleModel m " +
             "JOIN VehicleBrand b on b = m.brand")
     List<ModelAndBrandDto> getModelsAndBrands();
+
+    Optional<Vehicle> findByIdAndVersion(Long id, Integer version);
 }

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { Brand, Model, Vehicle, VehicleDetails } from './vehicle';
 import { EntityService } from '../entity.service';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 
 type ModelAndBrand = Model & Brand;
@@ -23,5 +23,12 @@ export class VehicleService extends EntityService<Vehicle, VehicleDetails> {
 
   getModels(): Observable<Array<ModelAndBrand>> {
     return this.httpClient.get<ModelAndBrand[]>(`${VehicleService.apiEndpoint}/modelsAndBrands`);
+  }
+
+  save(vehicle: VehicleDetails): Observable<VehicleDetails> {
+    if (vehicle.id) {
+      return this.httpClient.put<VehicleDetails>(`${VehicleService.apiEndpoint}/${vehicle.id}`, vehicle);
+    }
+    return this.httpClient.post<VehicleDetails>(`${VehicleService.apiEndpoint}`, vehicle);
   }
 }

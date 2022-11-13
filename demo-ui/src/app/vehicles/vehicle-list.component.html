@@ -20,7 +20,6 @@
   </table>
   <nav aria-label="Page navigation example" *ngIf="page.totalPages > 1">
     <ul class="pagination">
-
       <li
         *ngFor="
           let pageNumber of [].constructor(page.totalPages);
@@ -33,4 +32,5 @@
 
     </ul>
   </nav>
+  <a class="btn btn-primary" [routerLink]="['/vehicles', 'new']" role="button">Add new</a>
 </ng-container>

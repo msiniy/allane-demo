@@ -1,5 +1,5 @@
 export interface Vehicle {
-  id: number;
+  id?: number;
   brandName: string;
   modelName: string;
   modelYear: number;

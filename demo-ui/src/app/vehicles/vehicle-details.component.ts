@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 
-import { Observable } from 'rxjs';
+import { forkJoin, merge, Observable, of } from 'rxjs';
 import { Brand, Model, VehicleDetails } from './vehicle';
 import { VehicleService } from './vehicle.service';
 
@@ -12,36 +12,30 @@ import { VehicleService } from './vehicle.service';
   styleUrls: ['./vehicle-details.component.css'],
 })
 export class VehicleDetailsComponent implements OnInit {
-  vehicle: Partial<VehicleDetails> = { version: 0 };
+  vehicle: VehicleDetails| null = null;
 
-  selectedBrand: Brand | null  = null;
-
+  selectedBrand: Brand | null = null;
   selectedModel: Model | null = null;
 
-  brands = new Map<number, Brand>();
-  models = new Map<number, Model>();
-  modelsByBrandId = new Map<number, Set<Model>>();
+  brands: Brand[] = [];
+  models: Model[] = [];
+  modelsByBrandId = new Map<number, Model[]>();
 
   vehicleForm = this.fb.group({
     version: new FormControl(0, {
       validators: Validators.required,
       nonNullable: true,
     }),
-    brand: new FormControl<number | null>(null, {
+    brandId: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    model: new FormControl<number | null>(null, {
+    modelId: new FormControl<number | null>(null, {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    year: new FormControl<number | null>(
-      { value: null, disabled: true },
-      {
-        validators: [Validators.required],
-      }
-    ),
-    vin: new FormControl<string | null>('', {
+    modelYear: new FormControl<number | null>({ value: null, disabled: true }),
+    vin: new FormControl<string | null>(null, {
       validators: [Validators.minLength(17), Validators.maxLength(17)],
     }),
     price: new FormControl<number | null>(null, {
@@ -51,73 +45,112 @@ export class VehicleDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private vehicleService: VehicleService
   ) {}
 
   ngOnInit(): void {
-    this.vehicleService.getModels().subscribe(response => {
-      this.brands = new Map<number, Brand>();
-      this.modelsByBrandId = new Map<number, Set<Model>>();
-      response.forEach(item => {
-        this.brands.set(item.brandId, {...item});
-        const model: Model = {...item};
-        const mapEntry = this.modelsByBrandId.get(item.brandId);
-        if (!mapEntry) {
-          this.modelsByBrandId.set(item.brandId, new Set<Model>([model]));
-        } else {
-          mapEntry.add(model);
-        }
-      })
-
-    });
     const idParam = this.route.snapshot.paramMap.get('id');
     const vehicleId = idParam === 'new' ? null : Number(idParam);
+    forkJoin({
+      modelsResponse: this.vehicleService.getModels(),
+      detailsResponse: vehicleId
+        ? this.vehicleService.getDetails(vehicleId)
+        : of(this.vehicle),
+    }).subscribe((res) => {
+      this.updateBrandsAndModels(res['modelsResponse']);
+      if (res['detailsResponse']) {
+        this.updateForm(res['detailsResponse']);
+      }
+    });
+  }
 
-    if (vehicleId) {
-      this.vehicleService.getDetails(vehicleId).subscribe((vehicle) => {
-        this.vehicle = vehicle;
-        this.selectedBrand = {...vehicle};
-        this.selectedModel = {...vehicle};
-        this.models = new Map<number, Model>();
-        this.modelsByBrandId.get(vehicle.brandId)?.forEach(m => {
-          this.models.set(m.modelId, m);
-        })
+  private updateBrandsAndModels(data: (Model & Brand)[]): void {
+    const brandsMap = new Map<number, Brand>();
+    this.modelsByBrandId = new Map<number, Model[]>();
+    data.forEach((item) => {
+      brandsMap.set(item.brandId, { ...item });
+      const model: Model = { ...item };
+      const mapEntry = this.modelsByBrandId.get(item.brandId);
+      if (!mapEntry) {
+        this.modelsByBrandId.set(item.brandId, [model]);
+      } else {
+        mapEntry.push(model);
+      }
+    });
+    this.brands = [...brandsMap.values()];
+  }
 
-        this.vehicleForm.setValue({
-          brand: vehicle.brandId,
-          model: vehicle.modelId,
-          vin: vehicle.vin || null,
-          price: vehicle.price || null,
-          year: vehicle.modelYear,
-          version: vehicle.version || 0,
-        });
-      });
+  private updateForm(vehicle: VehicleDetails): void {
+    this.vehicle = vehicle;
+    this.selectedBrand = { ...vehicle };
+    this.selectedModel = { ...vehicle };
+
+    const modelsMap = new Map<number, Model>();
+    this.modelsByBrandId.get(vehicle.brandId)?.forEach((m) => {
+      modelsMap.set(m.modelId, m);
+    });
+
+    this.vehicleForm.patchValue(vehicle);
+    // Do not allow to change model and brand for existing vehicles
+    if (vehicle.id) {
+      this.vehicleForm.get('brandId')?.disable();
+      this.vehicleForm.get('modelId')?.disable();
     }
+    this.models = [...modelsMap.values()];
   }
 
   onBrandChange(): void {
-    const brandId = this.vehicleForm.get('brand')?.value;
-    if (!brandId) { return; }
-    this.models = new Map<number, Model>();
-    this.modelsByBrandId.get(brandId)?.forEach(m => {
-      this.models.set(m.modelId, m);
-    })
-    this.onModelChange();
+    const brandId = this.vehicleForm.get('brandId')?.value;
+    if (!brandId) {
+      return;
+    }
+    this.models = [];
+    this.modelsByBrandId.get(brandId)?.forEach((m) => {
+      this.models.push(m);
+    });
   }
 
   onModelChange(): void {
-    const modelId = this.vehicleForm.get('model')?.value;
+    const modelId = this.vehicleForm.get('modelId')?.value;
     if (!modelId) {
-      this.vehicleForm.patchValue({year: null});
+      this.vehicleForm.patchValue({ modelYear: null });
       return;
     }
-    const model = this.models.get(modelId);
-    this.vehicleForm.patchValue({year: model?.modelYear});
+    const model = this.models.find((m) => m.modelId == modelId);
+    this.vehicleForm.patchValue({ modelYear: model?.modelYear });
   }
 
   onSubmit(): void {
-    console.log('submit!');
-    console.warn(this.vehicleForm.value);
+    if (!this.vehicleForm.valid) {
+      console.error(
+        `There are form errors: ${JSON.stringify(this.vehicleForm.errors)}`
+      );
+      return;
+    }
+    const vehicleToSave = {
+      ...this.vehicle,
+      ...(this.vehicleForm.value as VehicleDetails),
+    };
+    if (vehicleToSave.vin === '') {
+      vehicleToSave.vin = undefined;
+    }
+    this.vehicleService.save(vehicleToSave).subscribe((vehicle) => {
+      if (vehicleToSave.id) {
+        // updating form
+        this.updateForm(vehicle);
+      } else {
+        this.router.navigate(['/vehicles', vehicle.id]);
+        this.updateForm(vehicle);
+      }
+    });
+  }
+
+  onReset(): void {
+    this.vehicleForm.reset();
+    if (this.vehicle) {
+      this.updateForm(this.vehicle);
+    }
   }
 }
