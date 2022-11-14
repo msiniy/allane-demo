@@ -65,7 +65,7 @@ public class ContractEndpoint {
     @ResponseBody
     ContractOverviewDto updateContract(@PathVariable("id") @NotNull Long id,
                                @RequestBody @NotNull @Valid ContractDto contractDto) {
-        var contract = this.contractRepository.findByIdAndVersion(id, contractDto.version())
+        var contract = this.contractRepository.findByIdAndVersion(id, contractDto.getVersion())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
         // The design decision was not to allow to change or delete contract customer or vehicle.
         // That the thing that shall be asked or confirmed by PMs or BAs.
@@ -77,9 +77,9 @@ public class ContractEndpoint {
     @ResponseBody
     ContractOverviewDto createContract(@RequestBody @NotNull @Valid ContractDto contractDto) {
         // make sure the specified customer exists
-        var customer = this.customerRepository.findById(contractDto.customerId())
+        var customer = this.customerRepository.findById(contractDto.getCustomerId())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid customer"));
-        var vehicle = this.vehicleRepository.findById(contractDto.vehicleId())
+        var vehicle = this.vehicleRepository.findById(contractDto.getVehicleId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid vehicle"));
 
         // map and save contract
@@ -96,32 +96,32 @@ public class ContractEndpoint {
     private ContractOverviewDto mapToContractOverviewDto(ContractDto c) {
         return ContractOverviewDto.builder()
                 .contract(ContractDto.builder()
-                        .id(c.id())
-                        .version(c.version())
-                        .contractNumber(c.contractNumber())
-                        .monthlyRate(c.monthlyRate())
-                        .vehicleId(c.vehicleId())
-                        .customerId(c.customerId())
+                        .id(c.getId())
+                        .version(c.getVersion())
+                        .contractNumber(c.getContractNumber())
+                        .monthlyRate(c.getMonthlyRate())
+                        .vehicleId(c.getVehicleId())
+                        .customerId(c.getCustomerId())
                         .build())
                 .customer(CustomerDto.builder()
-                        .id(c.customerId())
-                        .firstName(c.customerFirstName())
-                        .lastName(c.customerLastName())
+                        .id(c.getCustomerId())
+                        .firstName(c.getCustomerFirstName())
+                        .lastName(c.getCustomerLastName())
                         .build())
                 .vehicle(VehicleDto.builder()
-                        .id(c.vehicleId())
-                        .brandName(c.brandName())
-                        .modelName(c.modelName())
-                        .modelYear(c.modelYear())
-                        .vin(c.vehicleVin())
-                        .price(c.vehiclePrice())
+                        .id(c.getVehicleId())
+                        .brandName(c.getBrandName())
+                        .modelName(c.getModelName())
+                        .modelYear(c.getModelYear())
+                        .vin(c.getVehicleVin())
+                        .price(c.getVehiclePrice())
                         .build())
                 .build();
     }
 
     private LeasingContract mapFromDto(ContractDto dto, LeasingContract contract) {
-        contract.setContractNumber(dto.contractNumber());
-        contract.setMonthlyRate(dto.monthlyRate());
+        contract.setContractNumber(dto.getContractNumber());
+        contract.setMonthlyRate(dto.getMonthlyRate());
         return contract;
     }
 

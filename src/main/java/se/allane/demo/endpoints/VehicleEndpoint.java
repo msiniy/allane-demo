@@ -68,7 +68,7 @@ public class VehicleEndpoint {
     @ResponseBody
     VehicleDetailsDto createVehicle(@RequestBody @NotNull @Valid VehicleDetailsDto vehicleDto) {
         var vehicle = this.mapFromDto(vehicleDto, new Vehicle());
-        var model = this.modelRepository.findById(vehicleDto.modelId())
+        var model = this.modelRepository.findById(vehicleDto.getModelId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Specified model is incorrect"));
         vehicle.setModel(model);
@@ -80,15 +80,15 @@ public class VehicleEndpoint {
     @ResponseBody
     VehicleDetailsDto updateVehicle(@PathVariable("id") @NotNull Long id,
                                     @RequestBody @NotNull @Valid VehicleDetailsDto vehicleDto) {
-        var vehicle = this.vehicleRepository.findByIdAndVersion(id, vehicleDto.version())
+        var vehicle = this.vehicleRepository.findByIdAndVersion(id, vehicleDto.getVersion())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
         this.vehicleRepository.save(mapFromDto(vehicleDto, vehicle));
         return this.getVehicleDetails(id);
     }
 
     private Vehicle mapFromDto(VehicleDetailsDto dto, Vehicle vehicle) {
-        vehicle.setVin(dto.vin());
-        vehicle.setPrice(dto.price());
+        vehicle.setVin(dto.getVin());
+        vehicle.setPrice(dto.getPrice());
         return vehicle;
     }
 }

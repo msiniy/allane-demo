@@ -58,16 +58,16 @@ public class CustomerEndpoint {
     @ResponseBody
     CustomerDto updateCustomer(@PathVariable("id") @NotNull Long id,
                                @RequestBody @NotNull @Valid CustomerDto customerDto) {
-        var customer = this.customerRepository.findByIdAndVersion(id, customerDto.version())
+        var customer = this.customerRepository.findByIdAndVersion(id, customerDto.getVersion())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT));
         this.customerRepository.save(mapFromDto(customerDto, customer));
         return this.getCustomer(id);
     }
 
     private Customer mapFromDto(CustomerDto dto, Customer customer) {
-        customer.setFirstName(dto.firstName());
-        customer.setLastName(dto.lastName());
-        customer.setBirthDate(dto.birthDate());
+        customer.setFirstName(dto.getFirstName());
+        customer.setLastName(dto.getLastName());
+        customer.setBirthDate(dto.getBirthDate());
         return customer;
     }
 }
