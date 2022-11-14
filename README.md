@@ -2,7 +2,7 @@
 Spring Boot + Angular demo app
 
 ## Prerequisites
- - JDK17
+ - JDK 11
  - docker and docker-compose that supports docker-compose file of version 3.1
 
 ## How to build
@@ -21,7 +21,7 @@ The server will start on port `9085`, so go to http://localhost:9085
 In a real world, such scenarios shall be discussed with PM's or BA's. 
 
 ## Technical decisions:
- - Peristence layer is based on `JPA` + `Spring Data JPA`, it's a quite popular solution, with own advantages and disadvantages.
+ - Persistence layer is based on `JPA` + `Spring Data JPA`, it's a quite popular solution, with own advantages and disadvantages.
  - `Lombok` is used to generate boilerplate code.
  - As there are only a few entities, mapping from `Entities` to `DTOs` is done manually, instead of library-based solution (Apache Dozer or MapStruct).
  - `Bootstrap` is used to build page layouts and styles.
@@ -29,4 +29,4 @@ In a real world, such scenarios shall be discussed with PM's or BA's.
 ## Things not done:
  - frontend-side validation. While the forms contains some validators, the errors aren't rendered on the forms.
  - backend-side validation is there, but the errors from backend aren't displayed as well. 
- - 
+
