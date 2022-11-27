@@ -22,6 +22,7 @@ export class VehicleDetailsComponent implements OnInit {
   models: Model[] = [];
   modelsByBrandId = new Map<number, Model[]>();
   error?: BackendError;
+  formIsSaved = false;
 
   vehicleForm = this.fb.group({
     version: new FormControl<number>(0, {
@@ -125,6 +126,7 @@ export class VehicleDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formIsSaved = false;
     if (!this.vehicleForm.valid) {
       console.error(
         `There are form errors: ${JSON.stringify(this.vehicleForm.errors)}`
@@ -147,6 +149,7 @@ export class VehicleDetailsComponent implements OnInit {
           this.router.navigate(['/vehicles', vehicle.id]);
           this.updateForm(vehicle);
         }
+        this.formIsSaved = true;
         this.error = undefined;
       },
       (err) => {

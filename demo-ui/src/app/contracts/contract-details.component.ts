@@ -26,6 +26,7 @@ export class ContractDetailsComponent implements OnInit {
   customers: Customer[] = [];
   vehicles: Vehicle[] = [];
   error?: BackendError;
+  formIsSaved = false;
 
   contractForm = this.fb.group({
     version: new FormControl<number>(0, {
@@ -83,6 +84,7 @@ export class ContractDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formIsSaved = false;
     if (!this.contractForm.valid) {
       console.error(
         `There are form errors: ${JSON.stringify(this.contractForm.errors)}`
@@ -103,6 +105,7 @@ export class ContractDetailsComponent implements OnInit {
           this.router.navigate(['/contracts', contract.contract.id]);
           this.updateForm(contract);
         }
+        this.formIsSaved = true;
         this.error = undefined;
       },
       (err) => {

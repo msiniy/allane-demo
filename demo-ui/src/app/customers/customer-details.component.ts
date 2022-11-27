@@ -15,6 +15,8 @@ export class CustomerDetailsComponent implements OnInit {
 
   error?: BackendError;
 
+  formIsSaved = false;
+
   customerForm = this.fb.group({
     version: new FormControl<number>(0, {
       validators: Validators.required,
@@ -58,6 +60,7 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.formIsSaved = false;
     if (!this.customerForm.valid) {
       console.error(
         `There are form errors: ${JSON.stringify(this.customerForm.errors)}`
@@ -77,6 +80,7 @@ export class CustomerDetailsComponent implements OnInit {
           this.router.navigate(['/customers', customer.id]);
           this.updateForm(customer);
         }
+        this.formIsSaved = true;
         this.error = undefined;
       },
       (err) => {
