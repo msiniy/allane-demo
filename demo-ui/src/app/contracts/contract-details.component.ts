@@ -38,7 +38,7 @@ export class ContractDetailsComponent implements OnInit {
       nonNullable: true,
     }),
     monthlyRate: new FormControl<number | null>(null, {
-      validators: [Validators.required, Validators.pattern(/^\d+\.\d{0,2}$/)],
+      validators: [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)],
       nonNullable: true,
     }),
     vehicleId: new FormControl<number | null>(null, {

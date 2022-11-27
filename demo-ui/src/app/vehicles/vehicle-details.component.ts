@@ -42,7 +42,7 @@ export class VehicleDetailsComponent implements OnInit {
       validators: [Validators.minLength(17), Validators.maxLength(17)],
     }),
     price: new FormControl<number>(0, {
-      validators: [Validators.required, Validators.pattern(/^\d+\.\d{0,2}$/)],
+      validators: [Validators.required, Validators.pattern(/^\d+(\.\d{0,2})?$/)],
     }),
   });
 
