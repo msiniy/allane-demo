@@ -1,4 +1,4 @@
-<form [formGroup]="contractForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="contractForm" (ngSubmit)="onSubmit()" novalidate>
   <input type="hidden" id="contractVersion" formControlName="version" />
 
   <div class="form-group">
@@ -6,9 +6,26 @@
     <input
       type="text"
       class="form-control"
+      [class.is-invalid]="
+        contractForm.get('contractNumber')?.invalid &&
+        contractForm.get('contractNumber')?.touched
+      "
       id="contractNumberFormControl"
       formControlName="contractNumber"
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="contractForm.get('contractNumber')?.invalid"
+    >
+      <ul>
+        <li *ngIf="contractForm.get('contractNumber')?.errors?.['required']">
+          Required
+        </li>
+        <li *ngIf="contractForm.get('contractNumber')?.errors?.['pattern']">
+          Invalid value
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -16,29 +33,64 @@
     <input
       type="text"
       class="form-control"
+      [class.is-invalid]="
+        contractForm.get('monthlyRate')?.invalid &&
+        contractForm.get('monthlyRate')?.touched
+      "
       id="monthlyRateFormControl"
       formControlName="monthlyRate"
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="contractForm.get('monthlyRate')?.invalid"
+    >
+      <ul>
+        <li *ngIf="contractForm.get('monthlyRate')?.errors?.['required']">
+          Required
+        </li>
+        <li *ngIf="contractForm.get('monthlyRate')?.errors?.['pattern']">
+          Invalid value
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group" *ngIf="isNew">
     <label for="vehicleFormControl">Vehicle</label>
     <select
       class="form-control"
+      [class.is-invalid]="
+        contractForm.get('vehicleId')?.invalid &&
+        contractForm.get('vehicleId')?.touched
+      "
       id="vehicleFormControl"
       formControlName="vehicleId"
     >
       <option [ngValue]="null" disabled>Select vehicle</option>
       <option *ngFor="let v of vehicles" [ngValue]="v.id">
-        {{ v.brandName }} - {{v.modelName}}({{v.modelYear}})
+        {{ v.brandName }} - {{ v.modelName }}({{ v.modelYear }})
       </option>
     </select>
+    <div
+      class="invalid-feedback"
+      *ngIf="contractForm.get('vehicleId')?.invalid"
+    >
+      <ul>
+        <li *ngIf="contractForm.get('vehicleId')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group" *ngIf="isNew">
     <label for="customerFormControl">Customer</label>
     <select
       class="form-control"
+      [class.is-invalid]="
+        contractForm.get('customerId')?.invalid &&
+        contractForm.get('customerId')?.touched
+      "
       id="customerFormControl"
       formControlName="customerId"
     >
@@ -47,12 +99,24 @@
         {{ c.firstName }} {{ c.lastName }}
       </option>
     </select>
+    <div
+      class="invalid-feedback"
+      *ngIf="contractForm.get('customerId')?.invalid"
+    >
+      <ul>
+        <li *ngIf="contractForm.get('customerId')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="container" *ngIf="!isNew">
     <div class="row">
       <div class="col">Customer</div>
-      <div class="col">{{ contract?.customer?.firstName }} {{contract?.customer?.lastName}}</div>
+      <div class="col">
+        {{ contract?.customer?.firstName }} {{ contract?.customer?.lastName }}
+      </div>
       <div class="col"></div>
     </div>
   </div>
@@ -60,8 +124,22 @@
   <div class="container" *ngIf="!isNew">
     <div class="row">
       <div class="col">Vehicle</div>
-      <div class="col">{{ contract?.vehicle?.brandName }} {{contract?.vehicle?.modelName}} ({{contract?.vehicle?.modelYear}})</div>
+      <div class="col">
+        {{ contract?.vehicle?.brandName }}
+        {{ contract?.vehicle?.modelName }} ({{ contract?.vehicle?.modelYear }})
+      </div>
       <div class="col">VIN: {{ contract?.vehicle?.vin }}</div>
+    </div>
+  </div>
+
+  <div class="container mt-2 mb-2" *ngIf="error">
+    <div class="alert alert-danger row">
+      <p>Server error: {{ error.status }} - {{ error.message }}</p>
+      <ul *ngIf="error.fieldErrors">
+        <li *ngFor="let e of error.fieldErrors">
+          {{ e.field }}: {{ e.message }}
+        </li>
+      </ul>
     </div>
   </div>
 

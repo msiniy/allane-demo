@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { forkJoin, of } from 'rxjs';
 import { Brand, Model, VehicleDetails } from './vehicle';
 import { VehicleService } from './vehicle.service';
+import { BackendError } from '../entity.service';
 
 @Component({
   selector: 'app-vehicle-details',
@@ -20,6 +21,7 @@ export class VehicleDetailsComponent implements OnInit {
   brands: Brand[] = [];
   models: Model[] = [];
   modelsByBrandId = new Map<number, Model[]>();
+  error?: BackendError;
 
   vehicleForm = this.fb.group({
     version: new FormControl<number>(0, {
@@ -39,7 +41,7 @@ export class VehicleDetailsComponent implements OnInit {
       validators: [Validators.minLength(17), Validators.maxLength(17)],
     }),
     price: new FormControl<number>(0, {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/^\d+\.\d{0,2}$/)],
     }),
   });
 
@@ -137,14 +139,20 @@ export class VehicleDetailsComponent implements OnInit {
     if (vehicleToSave.vin === '') {
       vehicleToSave.vin = undefined;
     }
-    this.vehicleService.save(vehicleToSave).subscribe((vehicle) => {
-      if (vehicleToSave.id) {
-        this.updateForm(vehicle);
-      } else {
-        this.router.navigate(['/vehicles', vehicle.id]);
-        this.updateForm(vehicle);
+    this.vehicleService.save(vehicleToSave).subscribe(
+      (vehicle) => {
+        if (vehicleToSave.id) {
+          this.updateForm(vehicle);
+        } else {
+          this.router.navigate(['/vehicles', vehicle.id]);
+          this.updateForm(vehicle);
+        }
+        this.error = undefined;
+      },
+      (err) => {
+        this.error = err;
       }
-    });
+    );
   }
 
   onReset(): void {

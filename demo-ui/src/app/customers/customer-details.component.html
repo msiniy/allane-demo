@@ -1,4 +1,4 @@
-<form [formGroup]="customerForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="customerForm" (ngSubmit)="onSubmit()" novalidate>
   <input type="hidden" id="customerVersion" formControlName="version" />
   <div class="form-group">
     <label for="firstNameFormControl">First Name</label>
@@ -7,7 +7,21 @@
       class="form-control"
       id="firstNameFormControl"
       formControlName="firstName"
+      [class.is-invalid]="
+        customerForm.get('firstName')?.invalid &&
+        customerForm.get('firstName')?.touched
+      "
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="customerForm.get('firstName')?.invalid"
+    >
+      <ul>
+        <li *ngIf="customerForm.get('firstName')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -17,7 +31,18 @@
       class="form-control"
       id="lastNameFormControl"
       formControlName="lastName"
+      [class.is-invalid]="
+        customerForm.get('lastName')?.invalid &&
+        customerForm.get('lastName')?.touched
+      "
     />
+    <div class="invalid-feedback" *ngIf="customerForm.get('lastName')?.invalid">
+      <ul>
+        <li *ngIf="customerForm.get('lastName')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -27,7 +52,21 @@
       class="form-control"
       id="birthDateFormControl"
       formControlName="birthDate"
+      [class.is-invalid]="
+        customerForm.get('birthDate')?.invalid &&
+        customerForm.get('birthDate')?.touched
+      "
     />
+    <div
+      class="invalid-feedback"
+      *ngIf="customerForm.get('birthDate')?.invalid"
+    >
+      <ul>
+        <li *ngIf="customerForm.get('birthDate')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">

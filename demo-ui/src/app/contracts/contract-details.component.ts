@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormControl, NonNullableFormBuilder, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  NonNullableFormBuilder,
+  Validators,
+} from '@angular/forms';
 
 import { Contract, ContractOverview } from './contract';
 import { ContractService } from './contract.service';
@@ -9,35 +14,38 @@ import { Customer } from '../customers/customer';
 import { forkJoin } from 'rxjs';
 import { VehicleService } from '../vehicles/vehicle.service';
 import { CustomerService } from '../customers/customer.service';
+import { BackendError } from '../entity.service';
 
 @Component({
   selector: 'app-contract-details',
   templateUrl: './contract-details.component.html',
-  styleUrls: ['./contract-details.component.css']
+  styleUrls: ['./contract-details.component.css'],
 })
 export class ContractDetailsComponent implements OnInit {
-
   contract: ContractOverview | null = null;
   customers: Customer[] = [];
   vehicles: Vehicle[] = [];
+  error?: BackendError;
 
   contractForm = this.fb.group({
     version: new FormControl<number>(0, {
-      validators: Validators.required,
+      validators: [Validators.required],
       nonNullable: true,
     }),
     contractNumber: new FormControl<number | null>(null, {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/^\d+$/)],
       nonNullable: true,
     }),
     monthlyRate: new FormControl<number | null>(null, {
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.pattern(/^\d+\.\d{0,2}$/)],
       nonNullable: true,
     }),
     vehicleId: new FormControl<number | null>(null, {
+      validators: [Validators.required],
       nonNullable: true,
     }),
     customerId: new FormControl<number | null>(null, {
+      validators: [Validators.required],
       nonNullable: true,
     }),
   });
@@ -48,7 +56,7 @@ export class ContractDetailsComponent implements OnInit {
     private fb: FormBuilder,
     private contractService: ContractService,
     private vehicleService: VehicleService,
-    private customerService: CustomerService,
+    private customerService: CustomerService
   ) {}
 
   ngOnInit(): void {
@@ -60,11 +68,11 @@ export class ContractDetailsComponent implements OnInit {
       });
     } else {
       forkJoin({
-        'vehicles': this.vehicleService.findFree(),
-        'customers': this.customerService.find(0, 200),
-      }).subscribe(res => {
-        this.customers = res["customers"].content;
-        this.vehicles = res["vehicles"];
+        vehicles: this.vehicleService.findFree(),
+        customers: this.customerService.find(0, 200),
+      }).subscribe((res) => {
+        this.customers = res['customers'].content;
+        this.vehicles = res['vehicles'];
       });
     }
   }
@@ -72,7 +80,6 @@ export class ContractDetailsComponent implements OnInit {
   updateForm(contract: ContractOverview): void {
     this.contract = contract;
     this.contractForm.patchValue(contract.contract);
-
   }
 
   onSubmit(): void {
@@ -83,16 +90,25 @@ export class ContractDetailsComponent implements OnInit {
       return;
     }
 
-    const contractToSave: Contract = {...this.contract?.contract, ...this.contractForm.value as Contract};
+    const contractToSave: Contract = {
+      ...this.contract?.contract,
+      ...(this.contractForm.value as Contract),
+    };
 
-    this.contractService.save(contractToSave).subscribe((contract) => {
-      if (contractToSave.id) {
-        this.updateForm(contract);
-      } else {
-        this.router.navigate(['/contracts', contract.contract.id]);
-        this.updateForm(contract);
+    this.contractService.save(contractToSave).subscribe(
+      (contract) => {
+        if (contractToSave.id) {
+          this.updateForm(contract);
+        } else {
+          this.router.navigate(['/contracts', contract.contract.id]);
+          this.updateForm(contract);
+        }
+        this.error = undefined;
+      },
+      (err) => {
+        this.error = err;
       }
-    });
+    );
   }
 
   onReset(): void {
@@ -102,7 +118,7 @@ export class ContractDetailsComponent implements OnInit {
     }
   }
 
-  get isNew() : boolean {
+  get isNew(): boolean {
     return this.contract?.contract.id === undefined;
   }
 }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { CustomerService } from './customer.service';
 import { Customer } from './customer';
+import { BackendError } from '../entity.service';
 
 @Component({
   selector: 'app-customer-details',
@@ -11,6 +12,8 @@ import { Customer } from './customer';
 })
 export class CustomerDetailsComponent implements OnInit {
   customer: Customer | null = null;
+
+  error?: BackendError;
 
   customerForm = this.fb.group({
     version: new FormControl<number>(0, {
@@ -66,14 +69,20 @@ export class CustomerDetailsComponent implements OnInit {
       ...(this.customerForm.value as Customer),
     };
 
-    this.customerService.save(customerToSave).subscribe((customer) => {
-      if (customerToSave.id) {
-        this.updateForm(customer);
-      } else {
-        this.router.navigate(['/customers', customer.id]);
-        this.updateForm(customer);
+    this.customerService.save(customerToSave).subscribe(
+      (customer) => {
+        if (customerToSave.id) {
+          this.updateForm(customer);
+        } else {
+          this.router.navigate(['/customers', customer.id]);
+          this.updateForm(customer);
+        }
+        this.error = undefined;
+      },
+      (err) => {
+        this.error = err;
       }
-    });
+    );
   }
 
   onReset(): void {

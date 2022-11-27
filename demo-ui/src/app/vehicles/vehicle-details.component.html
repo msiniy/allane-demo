@@ -1,4 +1,4 @@
-<form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" novalidate>
   <input type="hidden" id="vehicleVersion" formControlName="version" />
   <div class="form-group">
     <label for="brandFormControl">Brand</label>
@@ -7,20 +7,50 @@
       id="brandFormControl"
       formControlName="brandId"
       (change)="onBrandChange()"
+      [class.is-invalid]="
+        vehicleForm.get('brandId')?.invalid &&
+        vehicleForm.get('brandId')?.touched
+      "
     >
       <option [ngValue]="null" disabled>Select brand</option>
       <option *ngFor="let b of brands" [ngValue]="b.brandId">
         {{ b.brandName }}
       </option>
     </select>
+    <div class="invalid-feedback" *ngIf="vehicleForm.get('brandId')?.invalid">
+      <ul>
+        <li *ngIf="vehicleForm.get('brandId')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
     <label for="modelFormControl">Model</label>
-    <select class="form-control" id="modelFormControl" formControlName="modelId" (change)="onModelChange()">
+    <select
+      class="form-control"
+      id="modelFormControl"
+      formControlName="modelId"
+      (change)="onModelChange()"
+      [class.is-invalid]="
+        vehicleForm.get('modelId')?.invalid &&
+        vehicleForm.get('modelId')?.touched
+      "
+    >
+      >
       <option [ngValue]="null" disabled>Select model</option>
-      <option *ngFor="let m of models" [ngValue]="m.modelId">{{ m.modelName }}({{ m.modelYear }})</option>
+      <option *ngFor="let m of models" [ngValue]="m.modelId">
+        {{ m.modelName }}({{ m.modelYear }})
+      </option>
     </select>
+    <div class="invalid-feedback" *ngIf="vehicleForm.get('modelId')?.invalid">
+      <ul>
+        <li *ngIf="vehicleForm.get('modelId')?.errors?.['required']">
+          Required
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -40,7 +70,19 @@
       class="form-control"
       id="vinFormControl"
       formControlName="vin"
+      [class.is-invalid]="
+        vehicleForm.get('vin')?.invalid && vehicleForm.get('vin')?.touched
+      "
     />
+    <div class="invalid-feedback" *ngIf="vehicleForm.get('vin')?.invalid">
+      <ul>
+        <li
+          *ngIf="vehicleForm.get('vin')?.errors?.['minlength'] || vehicleForm.get('vin')?.errors?.['maxlength']"
+        >
+          VIN field shall have exactly 17 symbols
+        </li>
+      </ul>
+    </div>
   </div>
 
   <div class="form-group">
@@ -50,9 +92,33 @@
       class="form-control"
       id="priceFormControl"
       formControlName="price"
+      [class.is-invalid]="
+        vehicleForm.get('price')?.invalid && vehicleForm.get('price')?.touched
+      "
     />
+    <div class="invalid-feedback" *ngIf="vehicleForm.get('price')?.invalid">
+      <ul>
+        <li *ngIf="vehicleForm.get('price')?.errors?.['required']">Required</li>
+        <li *ngIf="vehicleForm.get('price')?.errors?.['pattern']">
+          Invalid value
+        </li>
+      </ul>
+    </div>
   </div>
 
-  <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">Cancel</button>
+  <div class="container mt-2 mb-2" *ngIf="error">
+    <div class="alert alert-danger row">
+      <p>Server error: {{ error.status }} - {{ error.message }}</p>
+      <ul *ngIf="error.fieldErrors">
+        <li *ngFor="let e of error.fieldErrors">
+          {{ e.field }}: {{ e.message }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <button type="button" (click)="onReset()" class="btn btn-secondary me-2 mt-2">
+    Cancel
+  </button>
   <button type="submit" class="btn btn-primary me-2 mt-2">Save</button>
 </form>
