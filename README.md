@@ -26,7 +26,3 @@ In a real world, such scenarios shall be discussed with PM's or BA's.
  - As there are only a few entities, mapping from `Entities` to `DTOs` is done manually, instead of library-based solution (Apache Dozer or MapStruct).
  - `Bootstrap` is used to build page layouts and styles.
 
-## Things not done:
- - frontend-side validation. While the forms contains some validators, the errors aren't rendered on the forms.
- - backend-side validation is there, but the errors from backend aren't displayed as well. 
-
